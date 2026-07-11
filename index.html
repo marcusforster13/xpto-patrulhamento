@@ -537,12 +537,15 @@ chips.forEach(chip => {
     const onSeeked = () => {
       vid.removeEventListener('seeked', onSeeked);
       vid.play();
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        curtain.classList.add('hide');
-        scanline.classList.remove('run');
-        void scanline.offsetWidth;
-        scanline.classList.add('run');
-      }));
+      vid.addEventListener('playing', function onPlaying(){
+        vid.removeEventListener('playing', onPlaying);
+        setTimeout(() => {
+          curtain.classList.add('hide');
+          scanline.classList.remove('run');
+          void scanline.offsetWidth;
+          scanline.classList.add('run');
+        }, 120);
+      });
     };
     vid.addEventListener('seeked', onSeeked);
     vid.currentTime = seg.start;
