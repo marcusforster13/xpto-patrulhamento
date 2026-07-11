@@ -71,7 +71,7 @@
     background:var(--bg-void);
     z-index:12;
     opacity:1;
-    transition:opacity .35s ease;
+    transition:opacity .18s ease;
   }
   .curtain.hide{
     opacity:0;
@@ -494,6 +494,17 @@ function safePlay(){
   }
 }
 
+// ----- Reactive black curtain: only shows when the video is genuinely
+// buffering/stalled (e.g. slow mobile connection mid-seek), and hides the
+// instant real playback resumes. On fast connections this is invisible;
+// on slow ones it prevents a stale/wrong frame from being seen. -----
+vid.addEventListener('waiting', () => {
+  curtain.classList.remove('hide');
+});
+vid.addEventListener('playing', () => {
+  curtain.classList.add('hide');
+});
+
 startBtn.addEventListener('click', () => {
   if(startBtn.disabled) return;
   started = true;
@@ -504,10 +515,6 @@ startBtn.addEventListener('click', () => {
   vid.muted = true;
   vid.currentTime = SEGMENTS.base.start;
   safePlay();
-  vid.addEventListener('playing', function revealOnce(){
-    vid.removeEventListener('playing', revealOnce);
-    curtain.classList.add('hide');
-  });
   controls.classList.add('show');
   playUntil(SEGMENTS.base.end, () => {});
 });
@@ -559,6 +566,7 @@ chips.forEach(chip => {
     readout.classList.remove('show');
 
     const seg = SEGMENTS[key];
+    curtain.classList.remove('hide');
     vid.muted = (key !== 'siren');
     vid.currentTime = seg.start;
     safePlay();
