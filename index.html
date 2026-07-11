@@ -473,6 +473,18 @@ setTimeout(enableStart, 4000);
 vid.currentTime = 0;
 
 // ----- Start base clip -----
+// ----- Safe play: mobile browsers can reject play() if it's interrupted
+// by a pause() call milliseconds later; without catching this, the video
+// can end up stuck paused. Catch and retry once. -----
+function safePlay(){
+  const p = vid.play();
+  if(p && typeof p.catch === 'function'){
+    p.catch(() => {
+      setTimeout(() => { vid.play().catch(() => {}); }, 60);
+    });
+  }
+}
+
 startBtn.addEventListener('click', () => {
   if(startBtn.disabled) return;
   started = true;
@@ -481,7 +493,7 @@ startBtn.addEventListener('click', () => {
   setTimeout(() => centerStack.classList.add('hidden'), 500);
 
   vid.currentTime = SEGMENTS.base.start;
-  vid.play();
+  safePlay();
   vid.addEventListener('playing', function revealOnce(){
     vid.removeEventListener('playing', revealOnce);
     curtain.classList.add('hide');
@@ -537,7 +549,7 @@ chips.forEach(chip => {
 
     const seg = SEGMENTS[key];
     vid.currentTime = seg.start;
-    vid.play();
+    safePlay();
 
     scanline.classList.remove('run');
     void scanline.offsetWidth;
