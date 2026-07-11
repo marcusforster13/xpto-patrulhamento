@@ -503,16 +503,23 @@ replayBtn.addEventListener('click', () => {
 });
 
 // ----- Play a segment until 'end', then pause -----
+let activeCheck = null;
 function playUntil(end, onDone){
+  if(activeCheck){
+    vid.removeEventListener('timeupdate', activeCheck);
+    activeCheck = null;
+  }
   function check(){
     if(vid.currentTime >= end - 0.03){
       vid.pause();
       vid.currentTime = end;
       vid.removeEventListener('timeupdate', check);
+      activeCheck = null;
       if(onDone) onDone();
       return;
     }
   }
+  activeCheck = check;
   vid.addEventListener('timeupdate', check);
 }
 
