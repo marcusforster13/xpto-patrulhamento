@@ -485,9 +485,8 @@ startBtn.addEventListener('click', () => {
     vid.removeEventListener('playing', revealOnce);
     curtain.classList.add('hide');
   });
-  playUntil(SEGMENTS.base.end, () => {
-    controls.classList.add('show');
-  });
+  controls.classList.add('show');
+  playUntil(SEGMENTS.base.end, () => {});
 });
 
 replayBtn.addEventListener('click', () => {
