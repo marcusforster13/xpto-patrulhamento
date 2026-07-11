@@ -262,6 +262,7 @@
     font-size:11px;
     color:var(--muted);
   }
+  .chip .label .short{ display:none; }
   .chip:hover{
     border-color:var(--cyan);
     background:rgba(0,240,192,0.06);
@@ -337,11 +338,20 @@
 
   @media (max-width:640px){
     video, .poster{ object-fit:contain; background:#05070a; }
-    .readout{ left:16px; right:16px; max-width:none; bottom:150px; }
+    .readout{ left:16px; right:16px; max-width:none; bottom:172px; }
     .topbar{ padding:16px; }
-    .controls{ padding:0 12px 24px; }
-    .chip{ padding:12px 14px; font-size:12px; }
+    .controls{ padding:0 10px 20px; }
+    .chips{ flex-wrap:nowrap; gap:6px; width:100%; }
+    .chip{ padding:10px 8px; font-size:11px; gap:5px; flex:1; justify-content:center; }
+    .chip .idx{ font-size:9.5px; }
+    .chip .label .full{ display:none; }
+    .chip .label .short{ display:inline; }
+    .chip .dot-live{ display:none; }
     .center-stack{ width:88%; }
+  }
+
+  @media (max-width:380px){
+    .chip{ font-size:9.5px; padding:9px 4px; }
   }
 
   .replay-btn{
@@ -400,13 +410,13 @@
   <div class="controls" id="controls">
     <div class="chips">
       <div class="chip" data-item="lpr">
-        <span class="idx">01</span> Câmera LPR / ANPR <span class="dot-live"></span>
+        <span class="idx">01</span><span class="label"><span class="full">Câmera LPR / ANPR</span><span class="short">LPR</span></span><span class="dot-live"></span>
       </div>
       <div class="chip" data-item="kit">
-        <span class="idx">02</span> Kit Câmera Android 2 <span class="dot-live"></span>
+        <span class="idx">02</span><span class="label"><span class="full">Kit Câmera Android 2</span><span class="short">Kit Cam</span></span><span class="dot-live"></span>
       </div>
       <div class="chip" data-item="siren">
-        <span class="idx">03</span> Sirene e Baú <span class="dot-live"></span>
+        <span class="idx">03</span><span class="label"><span class="full">Sirene e Baú</span><span class="short">Sirene</span></span><span class="dot-live"></span>
       </div>
     </div>
     <button class="replay-btn" id="replayBtn">↺ REINICIAR APRESENTAÇÃO</button>
