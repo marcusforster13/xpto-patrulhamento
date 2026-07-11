@@ -358,8 +358,9 @@
   <div class="scan-noise"></div>
   <div class="vignette"></div>
   <div class="curtain" id="curtain"></div>
-
   <div class="scanline" id="scanline"></div>
+
+
 
   <div class="topbar">
     <div class="brand"><span class="mark">XPTO</span>&nbsp;SISTEMAS DE SEGURANÇA</div>
@@ -415,8 +416,8 @@ const readoutTag = document.getElementById('readoutTag');
 const readoutTitle = document.getElementById('readoutTitle');
 const readoutText = document.getElementById('readoutText');
 const readoutSpecs = document.getElementById('readoutSpecs');
-const scanline = document.getElementById('scanline');
 const replayBtn = document.getElementById('replayBtn');
+const scanline = document.getElementById('scanline');
 const chips = document.querySelectorAll('.chip');
 
 // ---- Segment map (seconds) ----
@@ -527,28 +528,13 @@ chips.forEach(chip => {
 
     readout.classList.remove('show');
 
-    // hide video while it seeks/decodes to the new position, to avoid
-    // a flash of a stale frame (e.g. keyframe from an earlier segment)
-    curtain.classList.remove('hide');
-    vid.pause();
-
     const seg = SEGMENTS[key];
-
-    const onSeeked = () => {
-      vid.removeEventListener('seeked', onSeeked);
-      vid.play();
-      vid.addEventListener('playing', function onPlaying(){
-        vid.removeEventListener('playing', onPlaying);
-        setTimeout(() => {
-          curtain.classList.add('hide');
-          scanline.classList.remove('run');
-          void scanline.offsetWidth;
-          scanline.classList.add('run');
-        }, 220);
-      });
-    };
-    vid.addEventListener('seeked', onSeeked);
     vid.currentTime = seg.start;
+    vid.play();
+
+    scanline.classList.remove('run');
+    void scanline.offsetWidth;
+    scanline.classList.add('run');
 
     playUntil(seg.end, () => {
       const c = CONTENT[key];
