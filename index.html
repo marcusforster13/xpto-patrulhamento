@@ -426,7 +426,7 @@ const chips = document.querySelectorAll('.chip');
 const SEGMENTS = {
   base: { start: 0,   end: 4.7 },
   lpr:  { start: 5.0, end: 6.5 },
-  kit:  { start: 6.8, end: 8.0 },
+  kit:  { start: 6.8, end: 7.5 },
   siren:{ start: 8.0, end: 10.8 }
 };
 
@@ -501,6 +501,7 @@ startBtn.addEventListener('click', () => {
   centerStack.style.opacity = '0';
   setTimeout(() => centerStack.classList.add('hidden'), 500);
 
+  vid.muted = true;
   vid.currentTime = SEGMENTS.base.start;
   safePlay();
   vid.addEventListener('playing', function revealOnce(){
@@ -520,6 +521,7 @@ replayBtn.addEventListener('click', () => {
   controls.classList.remove('show');
   curtain.classList.remove('hide');
   vid.pause();
+  vid.muted = true;
   vid.currentTime = 0;
 });
 
@@ -557,6 +559,7 @@ chips.forEach(chip => {
     readout.classList.remove('show');
 
     const seg = SEGMENTS[key];
+    vid.muted = (key !== 'siren');
     vid.currentTime = seg.start;
     safePlay();
 
