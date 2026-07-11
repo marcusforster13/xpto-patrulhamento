@@ -36,7 +36,7 @@
     overflow:hidden;
   }
 
-  video{
+  video, .poster{
     position:absolute;
     inset:0;
     width:100%;
@@ -44,6 +44,14 @@
     object-fit:cover;
     filter:saturate(1.05) contrast(1.03);
   }
+
+  .poster{
+    z-index:5;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .18s ease;
+  }
+  .poster.show{ opacity:1; }
 
   .vignette{
     position:absolute; inset:0;
@@ -328,7 +336,7 @@
   .readout .specs span{ color:var(--cyan); }
 
   @media (max-width:640px){
-    video{ object-fit:contain; background:#05070a; }
+    video, .poster{ object-fit:contain; background:#05070a; }
     .readout{ left:16px; right:16px; max-width:none; bottom:150px; }
     .topbar{ padding:16px; }
     .controls{ padding:0 12px 24px; }
@@ -354,6 +362,7 @@
 
 <div class="stage">
   <video id="vid" muted playsinline preload="auto" src="moto-video.mp4"></video>
+  <img id="poster" class="poster">
   <div class="scan-noise"></div>
   <div class="vignette"></div>
   <div class="curtain" id="curtain"></div>
@@ -407,6 +416,12 @@
 <script>
 const vid = document.getElementById('vid');
 const curtain = document.getElementById('curtain');
+const poster = document.getElementById('poster');
+const POSTERS = {
+  lpr: 'poster-lpr.jpg',
+  kit: 'poster-kit.jpg',
+  siren: 'poster-siren.jpg'
+};
 const startBtn = document.getElementById('startBtn');
 const loadingRow = document.getElementById('loadingRow');
 const barFill = document.getElementById('barFill');
@@ -494,17 +509,6 @@ function safePlay(){
   }
 }
 
-// ----- Reactive black curtain: only shows when the video is genuinely
-// buffering/stalled (e.g. slow mobile connection mid-seek), and hides the
-// instant real playback resumes. On fast connections this is invisible;
-// on slow ones it prevents a stale/wrong frame from being seen. -----
-vid.addEventListener('waiting', () => {
-  curtain.classList.remove('hide');
-});
-vid.addEventListener('playing', () => {
-  curtain.classList.add('hide');
-});
-
 startBtn.addEventListener('click', () => {
   if(startBtn.disabled) return;
   started = true;
@@ -515,6 +519,7 @@ startBtn.addEventListener('click', () => {
   vid.muted = true;
   vid.currentTime = SEGMENTS.base.start;
   safePlay();
+  curtain.classList.add('hide');
   controls.classList.add('show');
   playUntil(SEGMENTS.base.end, () => {});
 });
@@ -566,7 +571,22 @@ chips.forEach(chip => {
     readout.classList.remove('show');
 
     const seg = SEGMENTS[key];
-    curtain.classList.remove('hide');
+
+    // Show the exact starting frame instantly (as a static image) so the
+    // switch never shows a wrong/stale frame, regardless of how long the
+    // real seek takes on a slow connection.
+    poster.src = POSTERS[key];
+    poster.classList.add('show');
+    let posterHidden = false;
+    const hidePoster = () => {
+      if(posterHidden) return;
+      posterHidden = true;
+      poster.classList.remove('show');
+      vid.removeEventListener('playing', hidePoster);
+    };
+    vid.addEventListener('playing', hidePoster);
+    setTimeout(hidePoster, 1200); // safety net: never stays stuck
+
     vid.muted = (key !== 'siren');
     vid.currentTime = seg.start;
     safePlay();
