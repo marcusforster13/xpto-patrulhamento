@@ -338,11 +338,11 @@
 
   @media (max-width:640px){
     video, .poster{ object-fit:contain; background:#05070a; }
-    .readout{ left:16px; right:16px; max-width:none; bottom:172px; }
+    .readout{ left:16px; right:16px; max-width:none; bottom:198px; }
     .topbar{ padding:16px; }
     .controls{ padding:0 10px 20px; }
-    .chips{ flex-wrap:nowrap; gap:6px; width:100%; }
-    .chip{ padding:10px 8px; font-size:11px; gap:5px; flex:1; justify-content:center; }
+    .chips{ display:grid; grid-template-columns:1fr 1fr; gap:8px; width:100%; }
+    .chip{ padding:10px 8px; font-size:11.5px; gap:5px; justify-content:center; }
     .chip .idx{ font-size:9.5px; }
     .chip .label .full{ display:none; }
     .chip .label .short{ display:inline; }
@@ -351,7 +351,7 @@
   }
 
   @media (max-width:380px){
-    .chip{ font-size:9.5px; padding:9px 4px; }
+    .chip{ font-size:10.5px; padding:9px 4px; }
   }
 
   .replay-btn{
@@ -418,6 +418,9 @@
       <div class="chip" data-item="siren">
         <span class="idx">03</span><span class="label"><span class="full">Sirene e Baú</span><span class="short">Sirene</span></span><span class="dot-live"></span>
       </div>
+      <div class="chip" data-item="handguard">
+        <span class="idx">04</span><span class="label"><span class="full">Protetores de Mão</span><span class="short">Mão</span></span><span class="dot-live"></span>
+      </div>
     </div>
     <button class="replay-btn" id="replayBtn">↺ REINICIAR APRESENTAÇÃO</button>
   </div>
@@ -430,7 +433,8 @@ const poster = document.getElementById('poster');
 const POSTERS = {
   lpr: 'poster-lpr.jpg',
   kit: 'poster-kit.jpg',
-  siren: 'poster-siren.jpg'
+  siren: 'poster-siren.jpg',
+  handguard: 'poster-handguard.jpg'
 };
 const startBtn = document.getElementById('startBtn');
 const loadingRow = document.getElementById('loadingRow');
@@ -452,7 +456,8 @@ const SEGMENTS = {
   base: { start: 0,   end: 4.7 },
   lpr:  { start: 5.0, end: 6.5 },
   kit:  { start: 6.8, end: 7.75 },
-  siren:{ start: 8.0, end: 10.8 }
+  siren:{ start: 8.0, end: 10.8 },
+  handguard:{ start: 10.87, end: 13.4 }
 };
 
 const CONTENT = {
@@ -473,6 +478,12 @@ const CONTENT = {
     title: 'Sirene e Baú',
     text: 'Giroflex e sirene para sinalização visual e sonora durante a abordagem, além de baú traseiro para transporte seguro de equipamentos da operação.',
     specs: ['SINALIZAÇÃO: <span>Giroflex + sirene</span>', 'CAPACIDADE: <span>Baú traseiro para equipamentos</span>']
+  },
+  handguard: {
+    tag: 'ITEM 04 / PROTEÇÃO',
+    title: 'Protetores de Mão',
+    text: 'Protetores instalados no guidão para proteger as mãos do condutor contra vento, impacto e intempéries durante a condução em patrulhamento.',
+    specs: ['PROTEÇÃO: <span>Vento e impacto</span>', 'POSIÇÃO: <span>Guidão, com sinalização LED</span>']
   }
 };
 
