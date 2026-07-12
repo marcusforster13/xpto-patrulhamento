@@ -562,21 +562,44 @@ replayBtn.addEventListener('click', () => {
 let activeCheck = null;
 function playUntil(end, onDone){
   if(activeCheck){
-    vid.removeEventListener('timeupdate', activeCheck);
+    activeCheck.cancel();
     activeCheck = null;
   }
-  function check(){
-    if(vid.currentTime >= end - 0.03){
-      vid.pause();
-      vid.currentTime = end;
-      vid.removeEventListener('timeupdate', check);
-      activeCheck = null;
-      if(onDone) onDone();
-      return;
-    }
+
+  let cancelled = false;
+  function finish(){
+    if(cancelled) return;
+    cancelled = true;
+    vid.pause();
+    vid.currentTime = end;
+    activeCheck = null;
+    if(onDone) onDone();
   }
-  activeCheck = check;
-  vid.addEventListener('timeupdate', check);
+
+  if(typeof vid.requestVideoFrameCallback === 'function'){
+    // Checked once per actually-rendered frame (~16-33ms resolution)
+    // instead of the coarser 'timeupdate' event (~250ms), so we catch
+    // the exact cut point before the next segment's content is ever painted.
+    function frameCheck(){
+      if(cancelled) return;
+      if(vid.currentTime >= end - 0.03){
+        finish();
+        return;
+      }
+      vid.requestVideoFrameCallback(frameCheck);
+    }
+    vid.requestVideoFrameCallback(frameCheck);
+    activeCheck = { cancel: () => { cancelled = true; } };
+  } else {
+    function check(){
+      if(vid.currentTime >= end - 0.03){
+        vid.removeEventListener('timeupdate', check);
+        finish();
+      }
+    }
+    vid.addEventListener('timeupdate', check);
+    activeCheck = { cancel: () => { cancelled = true; vid.removeEventListener('timeupdate', check); } };
+  }
 }
 
 // ----- Chip click: play feature segment -----
