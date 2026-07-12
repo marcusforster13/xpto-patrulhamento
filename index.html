@@ -338,7 +338,7 @@
 
   @media (max-width:640px){
     video, .poster{ object-fit:contain; background:#05070a; }
-    .readout{ left:16px; right:16px; max-width:none; bottom:198px; }
+    .readout{ left:16px; right:16px; max-width:none; bottom:246px; }
     .topbar{ padding:16px; }
     .controls{ padding:0 10px 20px; }
     .chips{ display:grid; grid-template-columns:1fr 1fr; gap:8px; width:100%; }
@@ -371,7 +371,7 @@
 <body>
 
 <div class="stage">
-  <video id="vid" muted playsinline preload="auto" src="moto-video.mp4?v=4"></video>
+  <video id="vid" muted playsinline preload="auto" src="moto-video.mp4?v=5"></video>
   <img id="poster" class="poster">
   <div class="scan-noise"></div>
   <div class="vignette"></div>
@@ -421,6 +421,9 @@
       <div class="chip" data-item="handguard">
         <span class="idx">04</span><span class="label"><span class="full">Protetores de Mão</span><span class="short">Mão</span></span><span class="dot-live"></span>
       </div>
+      <div class="chip" data-item="antenna">
+        <span class="idx">05</span><span class="label"><span class="full">Antena Corta-Linha</span><span class="short">Antena</span></span><span class="dot-live"></span>
+      </div>
     </div>
     <button class="replay-btn" id="replayBtn">↺ REINICIAR APRESENTAÇÃO</button>
   </div>
@@ -434,7 +437,8 @@ const POSTERS = {
   lpr: 'poster-lpr.jpg',
   kit: 'poster-kit.jpg',
   siren: 'poster-siren.jpg',
-  handguard: 'poster-handguard.jpg'
+  handguard: 'poster-handguard.jpg',
+  antenna: 'poster-antenna.jpg'
 };
 const startBtn = document.getElementById('startBtn');
 const loadingRow = document.getElementById('loadingRow');
@@ -457,7 +461,8 @@ const SEGMENTS = {
   lpr:  { start: 5.0, end: 6.5 },
   kit:  { start: 6.8, end: 7.75 },
   siren:{ start: 8.0, end: 10.8 },
-  handguard:{ start: 10.87, end: 13.4 }
+  handguard:{ start: 10.87, end: 13.4 },
+  antenna:{ start: 13.43, end: 16.2 }
 };
 
 const CONTENT = {
@@ -484,6 +489,12 @@ const CONTENT = {
     title: 'Protetores de Mão',
     text: 'Protetores instalados no guidão para proteger as mãos do condutor contra vento, impacto e intempéries durante a condução em patrulhamento.',
     specs: ['PROTEÇÃO: <span>Vento e impacto</span>', 'POSIÇÃO: <span>Guidão, com sinalização LED</span>']
+  },
+  antenna: {
+    tag: 'ITEM 05 / SEGURANÇA VIÁRIA',
+    title: 'Antena Corta-Linha',
+    text: 'Haste vertical instalada na moto para proteger o condutor contra linhas de pipa com cerol ou outros fios esticados em via pública durante o patrulhamento.',
+    specs: ['PROTEÇÃO: <span>Linhas e fios na via</span>', 'POSIÇÃO: <span>Frontal, na altura do condutor</span>']
   }
 };
 
