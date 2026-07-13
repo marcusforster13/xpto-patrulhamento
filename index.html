@@ -354,6 +354,14 @@
     .chip{ font-size:10.5px; padding:9px 4px; }
   }
 
+  /* ---------- Tablet portrait (e.g. iPad) ---------- */
+  @media (min-width:641px) and (max-width:1400px) and (orientation:portrait){
+    video, .poster{ object-fit:contain; background:#05070a; }
+    .readout{ left:32px; right:32px; max-width:520px; bottom:250px; }
+    .controls{ padding:0 28px 32px; }
+    .chips{ max-width:640px; margin:0 auto; }
+  }
+
   .replay-btn{
     display:flex; align-items:center; gap:8px;
     background:none; border:none;
